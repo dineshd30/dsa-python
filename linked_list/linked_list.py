@@ -27,13 +27,12 @@
 
 # The index int i provided to get(int i) and remove(int i) is guaranteed to be greater than or equal to 0.
 
-from typing import List
+from typing import List, Optional
 
 class Node:
     def __init__(self, val:int, next=None):
         self.val:int = val
         self.next:Node = next
-
 
 class LinkedList:
     def __init__(self):
@@ -107,6 +106,18 @@ class LinkedList:
           cur = cur.next
         return lst
 
+    def reverseList(self, head: Optional[Node]) -> Optional[Node]:
+      if not head:
+        return None
+      
+      newHead = head
+      if head.next:
+        newHead = self.reverseList(head.next)
+        head.next.next = head
+      head.next = None
+      
+      return newHead
+
 
 if __name__ == "__main__":
   ll = LinkedList()
@@ -115,6 +126,5 @@ if __name__ == "__main__":
   ll.insertTail(10)
   ll.insertHead(5)
   print(ll.getValues())
-  ll.remove(3)
-  ll.remove(0)
+  ll.head = ll.reverseList(ll.head)
   print(ll.getValues())
