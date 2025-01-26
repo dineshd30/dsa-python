@@ -1,5 +1,5 @@
-# Design Singly Linked List
-# Design a Singly Linked List class.
+# Design Doubly Linked List
+# Design a Doubly Linked List class.
 
 # Your LinkedList class should support the following operations:
 
@@ -30,9 +30,10 @@
 from typing import List, Optional
 
 class Node:
-    def __init__(self, val:int, next=None):
+    def __init__(self, val:int, next=None, prev=None):
         self.val:int = val
         self.next:Node = next
+        self.prev:Node = prev
 
 class LinkedList:
     def __init__(self):
@@ -52,13 +53,14 @@ class LinkedList:
     def insertHead(self, val: int) -> None:
         node = Node(val)
         # Zero node
-        if self.head is None:
+        if not self.head:
           self.head = node
           self.tail = self.head
           return
         
         # One/Many nodes
         if self.head is not None:
+          self.head.prev = node
           node.next = self.head
           self.head = node
 
@@ -73,44 +75,31 @@ class LinkedList:
         # One/Many node
         if self.tail:
           self.tail.next = node
-          self.tail = node
+          node.prev = self.tail
+          self.tail = self.tail.next
 
     def remove(self, index: int) -> bool:
-      prev = None
-      cur = self.head
-      
-      # base condition - linked list is empty
+      # empty
       if not self.head:
         return False
       
-      
-      # removing at index 0 i.e. removing the head node of linked list
       if index == 0:
-        temp = cur.next
-        # head and tail point to same node i.e. linked list has one node only
-        if self.tail == self.head:
-          self.tail = temp
-        
-        self.head = temp
-        return True
-      
-      
-      # removing from the middle of linked list i.e. from index 1 onwards
-      for i in range(1, index+1):
-        pre = cur
-        cur = cur.next
-        
-        # check if we are within linked list bound
-        if cur is None:
-          return False
-        
-        if i == index:
-          # check if we are removing last node in linked list i.e. the tail node
-          if cur.next is None:
-            self.tail = pre
+        self.head = self.head.next
+      else:
+        i = 1
+        prev = self.head
+        curToDel = prev.next
+        while i <= index and curToDel:
+          if i == index:
+            if curToDel == self.tail:
+              self.tail = prev
+            
+            prev.next = curToDel.next
+            return True
           
-          pre.next = cur.next
-          return True
+          prev = curToDel
+          curToDel = curToDel.next
+          i += 1
 
     def getValues(self) -> List[int]:
         cur = self.head
@@ -121,7 +110,6 @@ class LinkedList:
         return lst
 
     def reverseList(self, head: Optional[Node]) -> Optional[Node]:
-      # base condition - empty linked list
       if not head:
         return None
       
@@ -142,10 +130,4 @@ if __name__ == "__main__":
   ll.insertHead(5)
   print(ll.getValues())
   ll.head = ll.reverseList(ll.head)
-  print(ll.getValues())
-  ll.remove(1)
-  print(ll.getValues())
-  ll.remove(0)
-  print(ll.getValues())
-  ll.remove(1)
   print(ll.getValues())
