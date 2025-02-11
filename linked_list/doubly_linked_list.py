@@ -62,7 +62,7 @@ class LinkedList:
         if self.head is not None:
           self.head.prev = node
           node.next = self.head
-          self.head = node
+          self.head = self.head.prev
 
     def insertTail(self, val: int) -> None:
         node = Node(val)
@@ -79,27 +79,30 @@ class LinkedList:
           self.tail = self.tail.next
 
     def remove(self, index: int) -> bool:
-      # empty
+      # if the list if empty
       if not self.head:
         return False
       
+      cur = self.head
+      prev = None
+      
+      # removing the head node of the list
       if index == 0:
-        self.head = self.head.next
-      else:
-        i = 1
-        prev = self.head
-        curToDel = prev.next
-        while i <= index and curToDel:
-          if i == index:
-            if curToDel == self.tail:
-              self.tail = prev
-            
-            prev.next = curToDel.next
-            return True
-          
-          prev = curToDel
-          curToDel = curToDel.next
-          i += 1
+        if self.head == self.tail:
+          self.tail = cur.next
+        self.head = cur.next
+      
+      # if the list has more than one node
+      for i in range(1, index+1):
+        cur = cur.next
+        prev = cur
+        
+        if i == index:
+          prev.next = cur.next
+          if not cur.next:  # check if it is last node i.e. tail in list
+            self.tail = prev
+          else:
+            prev.next.prev = prev
 
     def getValues(self) -> List[int]:
         cur = self.head
