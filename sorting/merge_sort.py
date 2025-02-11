@@ -1,6 +1,6 @@
 from typing import List
 
-
+# Stable sorting algorithm and most commonly used
 def merge_sort(l:List[int]) -> List[int]:
   length = len(l)
   

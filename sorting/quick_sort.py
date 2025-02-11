@@ -1,6 +1,6 @@
 from typing import List
 
-
+# Unstable sorting algorithm and most commonly used
 def quick_sort(l:List[int], start:int, end:int) -> List[int]: 
   if end - start + 1 <=1:
     return l
